@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests\Peoples\Profile;
+namespace App\Http\Requests\Admin\Staff;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-final class UpdateProfileRequest extends FormRequest
+final class UpdateStaffRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true; // People can update their own profile
+        return $this->user()->can('update', $this->route('staff'));
     }
 
     /**
@@ -24,7 +24,7 @@ final class UpdateProfileRequest extends FormRequest
      */
     public function rules(): array
     {
-        $peopleId = $this->user('peoples')->id;
+        $peopleId = $this->route('staff')->id;
 
         return [
             'name' => ['required', 'string', 'max:255'],
@@ -33,12 +33,14 @@ final class UpdateProfileRequest extends FormRequest
                 'string',
                 'email',
                 'max:255',
-                Rule::unique('peoples', 'email')->ignore($peopleId),
+                Rule::unique('staffs', 'email')->ignore($peopleId),
                 Rule::unique('users', 'email'), // Check across all gates
             ],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
             'phone' => ['nullable', 'string', 'max:20'],
             'address' => ['nullable', 'string', 'max:500'],
             'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
+            'is_active' => ['boolean'],
         ];
     }
 
@@ -52,9 +54,11 @@ final class UpdateProfileRequest extends FormRequest
         return [
             'name' => 'nama',
             'email' => 'email',
+            'password' => 'kata sandi',
             'phone' => 'nomor telepon',
             'address' => 'alamat',
             'avatar' => 'foto profil',
+            'is_active' => 'status aktif',
         ];
     }
 
@@ -72,11 +76,14 @@ final class UpdateProfileRequest extends FormRequest
             'email.required' => 'Email wajib diisi.',
             'email.email' => 'Format email tidak valid.',
             'email.unique' => 'Email sudah terdaftar.',
+            'password.min' => 'Kata sandi minimal 8 karakter.',
+            'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
             'phone.max' => 'Nomor telepon maksimal 20 karakter.',
             'address.max' => 'Alamat maksimal 500 karakter.',
             'avatar.image' => 'File harus berupa gambar.',
             'avatar.mimes' => 'Foto profil harus berformat jpeg, png, atau jpg.',
             'avatar.max' => 'Ukuran foto profil maksimal 2MB.',
+            'is_active.boolean' => 'Status aktif harus berupa true atau false.',
         ];
     }
 }

@@ -2,25 +2,25 @@
 
 declare(strict_types=1);
 
-use App\Models\People;
+use App\Models\Staff;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\assertDatabaseHas;
 
 beforeEach(function (): void {
-    $this->people = People::factory()->create([
+    $this->people = Staff::factory()->create([
         'name' => 'Test People',
         'email' => 'test@example.com',
     ]);
 });
 
 it('can display profile edit page', function (): void {
-    actingAs($this->people, 'peoples')
-        ->get(route('peoples.profile.edit'))
+    actingAs($this->people, 'staff')
+        ->get(route('staff.profile.edit'))
         ->assertOk()
         ->assertInertia(fn ($page) => $page
-            ->component('Peoples/Profile/Edit')
-            ->has('people')
+            ->component('Staff/Profile/Edit')
+            ->has('staff')
         );
 });
 
@@ -32,12 +32,12 @@ it('can update own profile', function (): void {
         'address' => 'Updated Address',
     ];
 
-    actingAs($this->people, 'peoples')
-        ->patch(route('peoples.profile.update'), $updateData)
-        ->assertRedirect(route('peoples.profile.edit'))
+    actingAs($this->people, 'staff')
+        ->patch(route('staff.profile.update'), $updateData)
+        ->assertRedirect(route('staff.profile.edit'))
         ->assertSessionHas('success');
 
-    assertDatabaseHas('peoples', [
+    assertDatabaseHas('staffs', [
         'id' => $this->people->id,
         'name' => 'Updated Name',
         'email' => 'updated@example.com',
@@ -45,8 +45,8 @@ it('can update own profile', function (): void {
 });
 
 it('validates required fields when updating profile', function (): void {
-    actingAs($this->people, 'peoples')
-        ->patch(route('peoples.profile.update'), [
+    actingAs($this->people, 'staff')
+        ->patch(route('staff.profile.update'), [
             'name' => '',
             'email' => '',
         ])
@@ -54,10 +54,10 @@ it('validates required fields when updating profile', function (): void {
 });
 
 it('validates unique email when updating profile', function (): void {
-    $anotherPeople = People::factory()->create();
+    $anotherPeople = Staff::factory()->create();
 
-    actingAs($this->people, 'peoples')
-        ->patch(route('peoples.profile.update'), [
+    actingAs($this->people, 'staff')
+        ->patch(route('staff.profile.update'), [
             'name' => 'Test Name',
             'email' => $anotherPeople->email,
         ])
@@ -65,16 +65,16 @@ it('validates unique email when updating profile', function (): void {
 });
 
 it('can update profile with same email', function (): void {
-    actingAs($this->people, 'peoples')
-        ->patch(route('peoples.profile.update'), [
+    actingAs($this->people, 'staff')
+        ->patch(route('staff.profile.update'), [
             'name' => 'Updated Name',
             'email' => $this->people->email, // Same email
             'phone' => '+62 812 9999 9999',
         ])
-        ->assertRedirect(route('peoples.profile.edit'))
+        ->assertRedirect(route('staff.profile.edit'))
         ->assertSessionHas('success');
 
-    assertDatabaseHas('peoples', [
+    assertDatabaseHas('staffs', [
         'id' => $this->people->id,
         'name' => 'Updated Name',
     ]);

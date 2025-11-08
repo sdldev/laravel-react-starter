@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests\Admin\People;
+namespace App\Http\Requests\Staff\Profile;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-final class StorePeopleRequest extends FormRequest
+final class UpdateProfileRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return $this->user()->can('create', \App\Models\People::class);
+        return true; // Staff can update their own profile
     }
 
     /**
@@ -24,6 +24,8 @@ final class StorePeopleRequest extends FormRequest
      */
     public function rules(): array
     {
+        $staffId = $this->user('staff')->id;
+
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => [
@@ -31,14 +33,12 @@ final class StorePeopleRequest extends FormRequest
                 'string',
                 'email',
                 'max:255',
-                Rule::unique('peoples', 'email'),
+                Rule::unique('staffs', 'email')->ignore($staffId),
                 Rule::unique('users', 'email'), // Check across all gates
             ],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
             'phone' => ['nullable', 'string', 'max:20'],
             'address' => ['nullable', 'string', 'max:500'],
             'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
-            'is_active' => ['boolean'],
         ];
     }
 
@@ -52,11 +52,9 @@ final class StorePeopleRequest extends FormRequest
         return [
             'name' => 'nama',
             'email' => 'email',
-            'password' => 'kata sandi',
             'phone' => 'nomor telepon',
             'address' => 'alamat',
             'avatar' => 'foto profil',
-            'is_active' => 'status aktif',
         ];
     }
 
@@ -74,15 +72,11 @@ final class StorePeopleRequest extends FormRequest
             'email.required' => 'Email wajib diisi.',
             'email.email' => 'Format email tidak valid.',
             'email.unique' => 'Email sudah terdaftar.',
-            'password.required' => 'Kata sandi wajib diisi.',
-            'password.min' => 'Kata sandi minimal 8 karakter.',
-            'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
             'phone.max' => 'Nomor telepon maksimal 20 karakter.',
             'address.max' => 'Alamat maksimal 500 karakter.',
             'avatar.image' => 'File harus berupa gambar.',
             'avatar.mimes' => 'Foto profil harus berformat jpeg, png, atau jpg.',
             'avatar.max' => 'Ukuran foto profil maksimal 2MB.',
-            'is_active.boolean' => 'Status aktif harus berupa true atau false.',
         ];
     }
 }

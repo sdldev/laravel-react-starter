@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace App\Actions\Admin\People;
+namespace App\Actions\Admin\Staff;
 
-use App\Models\People;
+use App\Models\Staff;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
-final class CreatePeopleAction
+final class CreateStaffAction
 {
     /**
      * Execute the action to create a new people.
      *
      * @param  array<string, mixed>  $peopleData
      */
-    public function execute(array $peopleData, ?UploadedFile $avatarFile = null): People
+    public function execute(array $peopleData, ?UploadedFile $avatarFile = null): Staff
     {
         return DB::transaction(function () use ($peopleData, $avatarFile) {
             // Hash password if provided
@@ -30,7 +30,7 @@ final class CreatePeopleAction
             }
 
             // Create people record
-            return People::create($peopleData);
+            return Staff::create($peopleData);
         });
     }
 }

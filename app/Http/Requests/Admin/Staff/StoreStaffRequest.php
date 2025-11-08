@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests\Admin\People;
+namespace App\Http\Requests\Admin\Staff;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-final class UpdatePeopleRequest extends FormRequest
+final class StoreStaffRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return $this->user()->can('update', $this->route('people'));
+        return $this->user()->can('create', \App\Models\Staff::class);
     }
 
     /**
@@ -24,8 +24,6 @@ final class UpdatePeopleRequest extends FormRequest
      */
     public function rules(): array
     {
-        $peopleId = $this->route('people')->id;
-
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => [
@@ -33,10 +31,10 @@ final class UpdatePeopleRequest extends FormRequest
                 'string',
                 'email',
                 'max:255',
-                Rule::unique('peoples', 'email')->ignore($peopleId),
+                Rule::unique('staffs', 'email'),
                 Rule::unique('users', 'email'), // Check across all gates
             ],
-            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
             'phone' => ['nullable', 'string', 'max:20'],
             'address' => ['nullable', 'string', 'max:500'],
             'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
@@ -76,6 +74,7 @@ final class UpdatePeopleRequest extends FormRequest
             'email.required' => 'Email wajib diisi.',
             'email.email' => 'Format email tidak valid.',
             'email.unique' => 'Email sudah terdaftar.',
+            'password.required' => 'Kata sandi wajib diisi.',
             'password.min' => 'Kata sandi minimal 8 karakter.',
             'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
             'phone.max' => 'Nomor telepon maksimal 20 karakter.',

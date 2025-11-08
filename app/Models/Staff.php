@@ -9,9 +9,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
-final class People extends Authenticatable
+final class Staff extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\PeopleFactory> */
+    /** @use HasFactory<\Database\Factories\StaffFactory> */
     use HasFactory, Notifiable, TwoFactorAuthenticatable;
 
     /**
@@ -19,7 +19,7 @@ final class People extends Authenticatable
      *
      * @var string
      */
-    protected $table = 'peoples';
+    protected $table = 'staffs';
 
     /**
      * The attributes that are mass assignable.

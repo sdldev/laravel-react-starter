@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\Admin\PeopleController;
+use App\Http\Controllers\Admin\StaffController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,6 +17,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware(['auth:web', 'verified'])->prefix('admin')->name('admin.')->group(function (): void {
-    // People Management Routes (Admin CRUD)
-    Route::resource('people', PeopleController::class);
+    // Staff Management Routes (Admin CRUD)
+    Route::resource('staff', StaffController::class);
 });

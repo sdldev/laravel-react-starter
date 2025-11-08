@@ -41,9 +41,9 @@ return [
             'provider' => 'users',
         ],
 
-        'peoples' => [
+        'staff' => [
             'driver' => 'session',
-            'provider' => 'peoples',
+            'provider' => 'staffs',
         ],
     ],
 
@@ -70,9 +70,9 @@ return [
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
 
-        'peoples' => [
+        'staffs' => [
             'driver' => 'eloquent',
-            'model' => App\Models\People::class,
+            'model' => App\Models\Staff::class,
         ],
 
         // 'users' => [
@@ -108,9 +108,9 @@ return [
             'throttle' => 60,
         ],
 
-        'peoples' => [
-            'provider' => 'peoples',
-            'table' => 'peoples_password_reset_tokens',
+        'staffs' => [
+            'provider' => 'staffs',
+            'table' => 'staffs_password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
         ],

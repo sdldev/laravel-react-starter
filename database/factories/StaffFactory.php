@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\People>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Staff>
  */
-final class PeopleFactory extends Factory
+final class StaffFactory extends Factory
 {
     /**
      * The current password being used by the factory.
@@ -51,7 +51,7 @@ final class PeopleFactory extends Factory
     }
 
     /**
-     * Indicate that the people account is inactive.
+     * Indicate that the staff account is inactive.
      */
     public function inactive(): static
     {

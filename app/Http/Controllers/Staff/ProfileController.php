@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Peoples;
+namespace App\Http\Controllers\Staff;
 
-use App\Actions\Peoples\Profile\UpdateProfileAction;
+use App\Actions\Staff\Profile\UpdateProfileAction;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Peoples\Profile\UpdateProfileRequest;
+use App\Http\Requests\Staff\Profile\UpdateProfileRequest;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -22,27 +22,27 @@ final class ProfileController extends Controller
      */
     public function edit(): Response
     {
-        return Inertia::render('Peoples/Profile/Edit', [
-            'people' => auth('peoples')->user(),
+        return Inertia::render('Staff/Profile/Edit', [
+            'staff' => auth('staff')->user(),
         ]);
     }
 
     /**
-     * Update the authenticated people's profile.
+     * Update the authenticated staff's profile.
      */
     public function update(UpdateProfileRequest $request): RedirectResponse
     {
         try {
-            $people = auth('peoples')->user();
+            $staff = auth('staff')->user();
 
             $this->updateProfileAction->execute(
-                people: $people,
+                staff: $staff,
                 profileData: $request->validated(),
                 avatarFile: $request->file('avatar')
             );
 
             return redirect()
-                ->route('peoples.profile.edit')
+                ->route('staff.profile.edit')
                 ->with('success', 'Profil berhasil diperbarui!');
         } catch (\Exception $e) {
             return back()
