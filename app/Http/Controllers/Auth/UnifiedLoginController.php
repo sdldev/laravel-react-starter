@@ -24,8 +24,6 @@ final class UnifiedLoginController extends Controller
     /**
      * Proses unified login dengan auto-detection user type.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
      *
      * @throws \Illuminate\Validation\ValidationException
      */
@@ -65,11 +63,6 @@ final class UnifiedLoginController extends Controller
 
     /**
      * Attempt login sebagai Admin.
-     *
-     * @param  string  $email
-     * @param  string  $password
-     * @param  bool  $remember
-     * @return bool
      */
     protected function attemptAdminLogin(string $email, string $password, bool $remember): bool
     {
@@ -88,11 +81,6 @@ final class UnifiedLoginController extends Controller
 
     /**
      * Attempt login sebagai Staff.
-     *
-     * @param  string  $email
-     * @param  string  $password
-     * @param  bool  $remember
-     * @return bool
      */
     protected function attemptStaffLogin(string $email, string $password, bool $remember): bool
     {

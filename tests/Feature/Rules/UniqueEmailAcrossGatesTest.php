@@ -12,7 +12,7 @@ uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 test('unique email across gates passes when email is unique', function (): void {
     $validator = Validator::make(
         ['email' => 'unique@example.com'],
-        ['email' => [new UniqueEmailAcrossGates()]]
+        ['email' => [new UniqueEmailAcrossGates]]
     );
 
     expect($validator->passes())->toBeTrue();
@@ -23,7 +23,7 @@ test('unique email across gates fails when email exists in users table', functio
 
     $validator = Validator::make(
         ['email' => 'admin@example.com'],
-        ['email' => [new UniqueEmailAcrossGates()]]
+        ['email' => [new UniqueEmailAcrossGates]]
     );
 
     expect($validator->fails())->toBeTrue();
@@ -35,7 +35,7 @@ test('unique email across gates fails when email exists in staffs table', functi
 
     $validator = Validator::make(
         ['email' => 'staff@example.com'],
-        ['email' => [new UniqueEmailAcrossGates()]]
+        ['email' => [new UniqueEmailAcrossGates]]
     );
 
     expect($validator->fails())->toBeTrue();

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Validator;
 test('strong password passes with valid password', function (): void {
     $validator = Validator::make(
         ['password' => 'Password123'],
-        ['password' => [new StrongPassword()]]
+        ['password' => [new StrongPassword]]
     );
 
     expect($validator->passes())->toBeTrue();
@@ -17,7 +17,7 @@ test('strong password passes with valid password', function (): void {
 test('strong password fails when too short', function (): void {
     $validator = Validator::make(
         ['password' => 'Pass1'],
-        ['password' => [new StrongPassword()]]
+        ['password' => [new StrongPassword]]
     );
 
     expect($validator->fails())->toBeTrue();
@@ -27,7 +27,7 @@ test('strong password fails when too short', function (): void {
 test('strong password fails without uppercase', function (): void {
     $validator = Validator::make(
         ['password' => 'password123'],
-        ['password' => [new StrongPassword()]]
+        ['password' => [new StrongPassword]]
     );
 
     expect($validator->fails())->toBeTrue();
@@ -37,7 +37,7 @@ test('strong password fails without uppercase', function (): void {
 test('strong password fails without lowercase', function (): void {
     $validator = Validator::make(
         ['password' => 'PASSWORD123'],
-        ['password' => [new StrongPassword()]]
+        ['password' => [new StrongPassword]]
     );
 
     expect($validator->fails())->toBeTrue();
@@ -47,7 +47,7 @@ test('strong password fails without lowercase', function (): void {
 test('strong password fails without numbers', function (): void {
     $validator = Validator::make(
         ['password' => 'PasswordABC'],
-        ['password' => [new StrongPassword()]]
+        ['password' => [new StrongPassword]]
     );
 
     expect($validator->fails())->toBeTrue();

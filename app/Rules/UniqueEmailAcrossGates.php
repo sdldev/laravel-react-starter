@@ -23,15 +23,11 @@ final class UniqueEmailAcrossGates implements ValidationRule
 
     /**
      * ID yang akan dikecualikan dari pengecekan (untuk update).
-     *
-     * @var int|null
      */
     protected ?int $ignoreId = null;
 
     /**
      * Table tempat ID yang dikecualikan berada.
-     *
-     * @var string|null
      */
     protected ?string $ignoreTable = null;
 

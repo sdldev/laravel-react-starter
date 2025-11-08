@@ -16,7 +16,6 @@ trait ClearsOtherGuards
      * Logout dari semua guards kecuali yang ditentukan.
      *
      * @param  string  $except  Guard yang tidak akan di-logout
-     * @return void
      */
     protected function clearAllGuardsExcept(string $except): void
     {
@@ -31,8 +30,6 @@ trait ClearsOtherGuards
 
     /**
      * Logout dari semua guards.
-     *
-     * @return void
      */
     protected function clearAllGuards(): void
     {
