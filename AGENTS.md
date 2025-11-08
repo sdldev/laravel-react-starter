@@ -1,6 +1,6 @@
 ---
 name: laravel react inertia starter agent
-description: Agent for Laravel React Inertia Starter - Multi-Gate Authentication System (Admin & Peoples)
+description: Agent for Laravel React Inertia Starter - Multi-Gate Authentication System (Admin & Staff)
 ---
 # Laravel React Inertia Starter Agent
 
@@ -111,10 +111,10 @@ app/Actions/
 │   │   ├── CreateUserAction.php
 │   │   ├── UpdateUserAction.php
 │   │   └── DeleteUserAction.php
-│   ├── Peoples/
-│   │   ├── CreatePeopleAction.php
-│   │   ├── UpdatePeopleAction.php
-│   │   └── DeletePeopleAction.php
+│   ├── Staff/
+│   │   ├── CreateStaffAction.php
+│   │   ├── UpdateStaffAction.php
+│   │   └── DeleteStaffAction.php
 │   ├── {Feature}/
 │   │   ├── Create{Feature}Action.php
 │   │   └── Update{Feature}Action.php
@@ -122,7 +122,7 @@ app/Actions/
 │   └── Profile/
 │       ├── UpdateProfileAction.php
 │       └── ChangePasswordAction.php
-├── Peoples/
+├── Staff/
 │   ├── Attendance/
 │   │   ├── RecordAttendanceAction.php
 │   │   └── BulkRecordAttendanceAction.php
@@ -141,24 +141,24 @@ Notes:
 - Keep action classes single responsibility and named `*Action`.
 - Prefer `Shared` for actions consumed by multiple gates (e.g., email, exports, uploads).
 - Admin should own actions for user management, {feature} management.
-- Peoples should own actions for profile management and limited feature access.
+- Staff should own actions for profile management and limited feature access.
 
 #### Mapping (examples from the project)
 - **Admin Actions**:
   - `App\Actions\Admin\User\CreateUserAction` - Create admin user
   - `App\Actions\Admin\User\UpdateUserAction` - Update admin user
   - `App\Actions\Admin\User\DeleteUserAction` - Delete admin user
-  - `App\Actions\Admin\Peoples\CreatePeopleAction` - Create people (admin)
-  - `App\Actions\Admin\Peoples\UpdatePeopleAction` - Update people (admin)
-  - `App\Actions\Admin\Peoples\DeletePeopleAction` - Delete people (admin)
+  - `App\Actions\Admin\Staff\CreateStaffAction` - Create staff (admin)
+  - `App\Actions\Admin\Staff\UpdateStaffAction` - Update staff (admin)
+  - `App\Actions\Admin\Staff\DeleteStaffAction` - Delete staff (admin)
   - `App\Actions\Admin\{Feature}\Create{Feature}Action` - Create feature entity
   - `App\Actions\Admin\{Feature}\Update{Feature}Action` - Update feature entity
   - `App\Actions\Admin\{Feature}\Delete{Feature}Action` - Delete feature entity
 
-- **Peoples Actions**:
-  - `App\Actions\Peoples\Profile\UpdateProfileAction` - Update own profile
-  - `App\Actions\Peoples\{Feature}\Create{Feature}Action` - Create feature entity (if allowed)
-  - `App\Actions\Peoples\{Feature}\Update{Feature}Action` - Update feature entity (if allowed)
+- **Staff Actions**:
+  - `App\Actions\Staff\Profile\UpdateProfileAction` - Update own profile
+  - `App\Actions\Staff\{Feature}\Create{Feature}Action` - Create feature entity (if allowed)
+  - `App\Actions\Staff\{Feature}\Update{Feature}Action` - Update feature entity (if allowed)
 
 - **Shared Actions**:
   - `App\Actions\Shared\Email\SendNotificationAction` - Email notifications
@@ -216,7 +216,7 @@ This layout keeps intent explicit and makes future gate-level refactors predicta
 - **Location Pattern**: `app/Http/Requests/{Gate}/{Feature}/{Update/Store}{Feature}Request`
 - **Gate-Specific Structure**: 
   - **Admin**: `app/Http/Requests/Admin/User/StoreUserRequest.php`
-  - **Peoples**: `app/Http/Requests/Peoples/Profile/UpdateProfileRequest.php`
+  - **Staff**: `app/Http/Requests/Staff/Profile/UpdateProfileRequest.php`
 - All validation in Form Request classes, not controllers
 - **Messages**: Indonesian language (Bahasa Indonesia Baku) for user-facing content
 - **Cross-Gate Email Validation** - prevent duplicate emails across all gates:
@@ -233,7 +233,7 @@ This layout keeps intent explicit and makes future gate-level refactors predicta
   ```php
   public function authorize(): bool
   {
-      return $this->user()->can('create', People::class); // Gate-specific policy
+      return $this->user()->can('create', Staff::class); // Gate-specific policy
   }
   ```
 - **Required Methods**: `rules()`, `attributes()`, `messages()`
@@ -266,7 +266,7 @@ This layout keeps intent explicit and makes future gate-level refactors predicta
 - Full CRUD operations for all entities
 - Dashboard with analytics and charts
 
-**Peoples Portal (Responsive):**
+**Staff Portal (Responsive):**
 - Profile management interface
 - Limited CRUD access to specific features
 - Clean and intuitive forms
@@ -286,11 +286,11 @@ This layout keeps intent explicit and makes future gate-level refactors predicta
 ```php
 // Login Controllers per Gate
 AdminLoginController::class     // Handles admin authentication
-PeoplesLoginController::class   // Handles peoples authentication  
+StaffLoginController::class     // Handles staff authentication  
 UnifiedLoginController::class   // Auto-detects user type and redirects
 
 // Session Isolation (ClearsOtherGuards trait)
-$this->clearAllGuardsExcept('peoples'); // Logout other gates before peoples login
+$this->clearAllGuardsExcept('staff'); // Logout other gates before staff login
 ```
 
 ### Resources (API Responses)
@@ -313,10 +313,10 @@ This application implements a multi-gate authentication system with unified logi
 
 ### Authentication Gates
 - **Admin Gate**: `auth:web` - System administrators with full access to all features
-- **Peoples Gate**: `auth:peoples` - Regular users with limited access (profile management and specific features)
+- **Staff Gate**: `auth:staff` - Regular users with limited access (profile management and specific features)
 
 ### Unified Login System
-- Single login endpoint that automatically detects user type (admin or peoples)
+- Single login endpoint that automatically detects user type (admin or staff)
 - Redirects to appropriate dashboard based on user role
 - Session isolation prevents simultaneous logins across different gates
 
@@ -324,28 +324,28 @@ This application implements a multi-gate authentication system with unified logi
 ```
 Authentication Models:
 ├── User.php          # Admin authentication (guard: web)
-└── People.php        # Peoples authentication (guard: peoples)
+└── Staff.php         # Staff authentication (guard: staff)
 
 Frontend Entries:
 ├── admin.tsx         # Admin portal entry point
-├── peoples.tsx       # Peoples portal entry point
+├── staff.tsx         # Staff portal entry point
 └── site.tsx          # Public site entry point
 
 Blade Templates:
 ├── admin/app.blade.php    # Mounts admin.tsx
-├── peoples/app.blade.php  # Mounts peoples.tsx
+├── staff/app.blade.php    # Mounts staff.tsx
 └── site/app.blade.php     # Mounts site.tsx
 
 Controllers Structure:
 ├── Admin/            # Admin-only controllers (auth:web) - Full CRUD access
-├── Peoples/          # Peoples-only controllers (auth:peoples) - Limited access
+├── Staff/            # Staff-only controllers (auth:staff) - Limited access
 ├── Auth/             # Authentication controllers for all gates
 └── Public/           # Public site controllers (no auth)
 
 Routes Structure:
 ├── web.php           # Public site routes
 ├── admin.php         # Admin routes (middleware: auth:web)
-├── peoples.php       # Peoples routes (middleware: auth:peoples)
+├── staff.php         # Staff routes (middleware: auth:staff)
 └── auth.php          # Authentication routes (unified login)
 ```
 
@@ -384,8 +384,8 @@ resources/js/pages/{gate}/{feature}/Index.tsx
 ### Page Components
 
 - **Location**: `@/pages/` (Inertia page components organized by gate)
-- **Admin Pages**: `@/pages/admin/` - Full-featured desktop UI
-- **Peoples Pages**: `@/pages/peoples/` - Responsive interface for profile and features
+- **Admin Pages**: `@/pages/Admin/` - Full-featured desktop UI
+- **Staff Pages**: `@/pages/Staff/` - Responsive interface for profile and features
 - **Public Pages**: `@/pages/public/` - Public site pages
 - **Props**: Typed with TypeScript interfaces
 - **Navigation**: Use `<Link>` or `router.visit()`, never regular `<a>` tags
@@ -394,7 +394,7 @@ resources/js/pages/{gate}/{feature}/Index.tsx
 
 - **Location**: `@/layouts/`
 - **Admin Layout**: `admin-layout.tsx` - Sidebar-based desktop layout
-- **Peoples Layout**: `peoples-layout.tsx` - Responsive layout for peoples portal
+- **Staff Layout**: `staff-layout.tsx` - Responsive layout for staff portal
 - **Auth Layout**: `auth-layout.tsx` - Clean authentication pages
 - **Site Layout**: `site-layout.tsx` - Public site header/footer
 
@@ -409,8 +409,8 @@ resources/js/pages/{gate}/{feature}/Index.tsx
 
 ### Application Content Language
 - **Indonesian**: All user-facing content in Bahasa Indonesia Baku
-  - Page titles: "Manajemen Pengguna", "Daftar Siswa", "Laporan Kehadiran"
-  - Card descriptions: "Total siswa aktiv", "Kehadiran hari ini"
+  - Page titles: "Manajemen Pengguna", "Daftar Staff", "Laporan Kehadiran"
+  - Card descriptions: "Total staff aktif", "Kehadiran hari ini"
   - Button labels: "Simpan", "Hapus", "Edit", "Tambah Data"
   - Form labels: "Nama Lengkap", "Email", "Nomor Telepon"
   - Status messages: "Data berhasil disimpan", "Gagal menghapus data"
