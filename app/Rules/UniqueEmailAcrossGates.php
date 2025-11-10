@@ -63,7 +63,7 @@ final class UniqueEmailAcrossGates implements ValidationRule
             }
 
             if ($query->exists()) {
-                $fail('Email :attribute sudah digunakan oleh user lain.');
+                $fail("Email {$attribute} sudah digunakan oleh user lain.");
 
                 return;
             }

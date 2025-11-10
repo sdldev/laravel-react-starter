@@ -6,8 +6,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Traits\ClearsOtherGuards;
-use App\Models\Staff;
-use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -66,13 +64,6 @@ final class UnifiedLoginController extends Controller
      */
     protected function attemptAdminLogin(string $email, string $password, bool $remember): bool
     {
-        // Cek apakah user ada di tabel users
-        $user = User::where('email', $email)->first();
-
-        if (! $user) {
-            return false;
-        }
-
         return Auth::guard('web')->attempt([
             'email' => $email,
             'password' => $password,
@@ -84,21 +75,13 @@ final class UnifiedLoginController extends Controller
      */
     protected function attemptStaffLogin(string $email, string $password, bool $remember): bool
     {
-        // Cek apakah user ada di tabel staffs
-        $staff = Staff::where('email', $email)->first();
-
-        if (! $staff) {
-            return false;
-        }
-
-        // Cek apakah staff aktif
-        if (! $staff->is_active) {
-            return false;
-        }
-
-        return Auth::guard('staff')->attempt([
+        // Attempt login with is_active check
+        $credentials = [
             'email' => $email,
             'password' => $password,
-        ], $remember);
+            'is_active' => true,
+        ];
+
+        return Auth::guard('staff')->attempt($credentials, $remember);
     }
 }

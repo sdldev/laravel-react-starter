@@ -23,7 +23,6 @@ final class LoginAttempt extends Model
         'guard',
         'successful',
         'failure_reason',
-        'attempted_at',
     ];
 
     /**
@@ -35,7 +34,6 @@ final class LoginAttempt extends Model
     {
         return [
             'successful' => 'boolean',
-            'attempted_at' => 'datetime',
         ];
     }
 }

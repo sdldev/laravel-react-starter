@@ -19,11 +19,10 @@ return new class extends Migration
             $table->string('guard')->default('web'); // web atau staff
             $table->boolean('successful')->default(false);
             $table->string('failure_reason')->nullable();
-            $table->timestamp('attempted_at');
             $table->timestamps();
 
-            $table->index(['email', 'ip_address', 'attempted_at']);
-            $table->index(['email', 'successful', 'attempted_at']);
+            $table->index(['email', 'ip_address', 'created_at']);
+            $table->index(['email', 'successful', 'created_at']);
         });
     }
 

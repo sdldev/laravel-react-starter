@@ -64,7 +64,7 @@ final class StrongPassword implements ValidationRule
         }
 
         // Check minimum length
-        if (strlen($value) < $this->minLength) {
+        if (mb_strlen($value) < $this->minLength) {
             $fail("Password minimal harus {$this->minLength} karakter.");
 
             return;

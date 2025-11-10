@@ -45,7 +45,7 @@ final class SecurityHeaders
         // Content Security Policy (CSP)
         $csp = implode('; ', [
             "default-src 'self'",
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval'", // Vite needs unsafe-inline/eval
+            "script-src 'self' 'unsafe-inline'", // Vite needs unsafe-inline; consider using CSP nonces
             "style-src 'self' 'unsafe-inline'",
             "img-src 'self' data: https:",
             "font-src 'self' data:",

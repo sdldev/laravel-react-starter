@@ -95,8 +95,8 @@ class FortifyServiceProvider extends ServiceProvider
 
             return Limit::perMinute(5)
                 ->by($throttleKey)
-                ->response(function (Request $request, array $headers) {
-                    $retryAfter = $headers['Retry-After'] ?? 60;
+                ->response(function (Request $request, array $headers) use ($throttleKey) {
+                    $retryAfter = RateLimiter::availableIn($throttleKey);
 
                     return response()->json([
                         'message' => "Terlalu banyak percobaan login. Silakan coba lagi dalam {$retryAfter} detik.",
