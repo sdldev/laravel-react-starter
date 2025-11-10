@@ -78,14 +78,33 @@ class FortifyServiceProvider extends ServiceProvider
      */
     private function configureRateLimiting(): void
     {
+        // Two-factor authentication rate limiting
         RateLimiter::for('two-factor', function (Request $request) {
-            return Limit::perMinute(5)->by($request->session()->get('login.id'));
+            return Limit::perMinute(5)
+                ->by($request->session()->get('login.id'))
+                ->response(function (Request $request, array $headers) {
+                    return response()->json([
+                        'message' => 'Terlalu banyak percobaan verifikasi. Silakan coba lagi dalam beberapa saat.',
+                    ], 429, $headers);
+                });
         });
 
+        // Login rate limiting - 5 attempts per minute
         RateLimiter::for('login', function (Request $request) {
             $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
 
-            return Limit::perMinute(5)->by($throttleKey);
+            return Limit::perMinute(5)
+                ->by($throttleKey)
+                ->response(function (Request $request, array $headers) use ($throttleKey) {
+                    $retryAfter = RateLimiter::availableIn($throttleKey);
+
+                    return response()->json([
+                        'message' => "Terlalu banyak percobaan login. Silakan coba lagi dalam {$retryAfter} detik.",
+                        'errors' => [
+                            'email' => ["Terlalu banyak percobaan login. Silakan coba lagi dalam {$retryAfter} detik."],
+                        ],
+                    ], 429, $headers);
+                });
         });
     }
 }
